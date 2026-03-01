@@ -1,20 +1,44 @@
+<div align="center">
+
+<img src="purbleplace.png" alt="Purble Place" width="128">
+
 # Purble Place en Linux
 
-Guía para instalar y ejecutar **Purble Place** (Windows Vista/7) en **Kubuntu 24.04** con Wine 11, en español y con icono original en el menú KDE.
+**Los 3 minijuegos clásicos de Windows Vista/7, funcionando en Linux con Wine.**
 
-![Purble Place](purbleplace.png)
+[![Platform](https://img.shields.io/badge/Kubuntu-24.04_Noble-0078D4?style=flat-square&logo=ubuntu&logoColor=white)](https://kubuntu.org/)
+[![Wine](https://img.shields.io/badge/Wine-11.0_stable-722F37?style=flat-square&logo=wine&logoColor=white)](https://www.winehq.org/)
+[![Desktop](https://img.shields.io/badge/KDE_Plasma-6-1D99F3?style=flat-square&logo=kde&logoColor=white)](https://kde.org/)
+[![Lang](https://img.shields.io/badge/Idioma-Español-E4002B?style=flat-square)](INSTALACION.md#5-parchear-español-embeber-mui-en-el-exe)
 
-## Qué es Purble Place
+</div>
 
-Colección de 3 minijuegos clásicos desarrollados por Oberon Games para Microsoft:
+<br>
 
-- **Purble Pairs** — Juego de memoria
-- **Comfy Cakes** — Pastelería (seguir patrones)
-- **Purble Shop** — Adivinanza por deducción
+## Contenido
 
-## Instalación rápida
+- [Minijuegos](#minijuegos)
+- [Inicio rápido](#inicio-rápido)
+- [Descargas](#descargas)
+- [Troubleshooting](#troubleshooting)
+- [Entorno probado](#entorno-probado)
+- [Estructura del repositorio](#estructura-del-repositorio)
 
-### 1. Instalar Wine 11 estable
+<br>
+
+## Minijuegos
+
+| | Juego | Descripción |
+|---|---|---|
+| 🧠 | **Purble Pairs** | Juego de memoria — encuentra las parejas |
+| 🎂 | **Comfy Cakes** | Pastelería — reproduce el patrón indicado |
+| 🎭 | **Purble Shop** | Adivinanza — deduce la combinación correcta |
+
+<br>
+
+## Inicio rápido
+
+### 1 &nbsp; Instalar Wine 11
 
 ```bash
 sudo dpkg --add-architecture i386
@@ -26,7 +50,7 @@ sudo wget -NP /etc/apt/sources.list.d/ \
 sudo apt update && sudo apt install --install-recommends winehq-stable
 ```
 
-### 2. Instalar dependencias
+### 2 &nbsp; Instalar dependencias
 
 ```bash
 sudo apt install -y \
@@ -35,21 +59,35 @@ sudo apt install -y \
   winetricks icoutils unrar
 ```
 
-### 3. Descargar el juego
+### 3 &nbsp; Descargar el juego
 
-**Versión español:**
+<details>
+<summary><b>Español</b> (requiere parcheo con Resource Hacker)</summary>
+
 ```bash
-wget "https://archive.org/download/purble-place_202106/Purble%20Place.rar" -O /tmp/PurblePlace_ES.rar
+wget "https://archive.org/download/purble-place_202106/Purble%20Place.rar" \
+  -O /tmp/PurblePlace_ES.rar
 ```
 
-**Versión inglés (alternativa, sin necesidad de parchear):**
+</details>
+
+<details>
+<summary><b>English</b> (funciona directo, sin parches)</summary>
+
 ```bash
-wget "https://archive.org/download/purble-place-0.4-modern-windows-compatible/Purble%20Place.zip" -O /tmp/PurblePlace_EN.zip
+wget "https://archive.org/download/purble-place-0.4-modern-windows-compatible/Purble%20Place.zip" \
+  -O /tmp/PurblePlace_EN.zip
 ```
 
-### 4. Seguir la guía completa
+</details>
 
-Ver **[INSTALACION.md](INSTALACION.md)** para los pasos detallados de configuración de Wine, parcheo de idioma español, extracción de iconos y creación del lanzador KDE.
+### 4 &nbsp; Configurar y jugar
+
+> Consulta **[INSTALACION.md](INSTALACION.md)** para la guía completa:
+> prefijo Wine, dependencias, parcheo de idioma, fix de crashes,
+> extracción de icono y lanzador KDE.
+
+<br>
 
 ## Descargas
 
@@ -60,32 +98,63 @@ Ver **[INSTALACION.md](INSTALACION.md)** para los pasos detallados de configurac
 | Resource Hacker | [angusj.com](https://www.angusj.com/resourcehacker/) |
 | Wine HQ | [winehq.org](https://dl.winehq.org/wine-builds/ubuntu/) |
 
-## Problemas conocidos
+<br>
+
+## Troubleshooting
 
 | Problema | Solución |
 |---|---|
-| Crash "divide by zero" | Fix HIGHDPIAWARE + DPI 96 via registro |
+| Crash *divide by zero* | Fix `HIGHDPIAWARE` + DPI 96 via registro |
 | Textos con IDs internos | Embeber MUI con Resource Hacker |
-| "Failed to load libGL" | Instalar `libgl1:i386 mesa-vulkan-drivers:i386` |
+| *Failed to load libGL* | `apt install libgl1:i386 mesa-vulkan-drivers:i386` |
 
-Ver la sección completa de troubleshooting en [INSTALACION.md](INSTALACION.md).
+<details>
+<summary><b>Ver todos los problemas y soluciones</b></summary>
 
-## Probado en
+| Problema | Causa | Solución |
+|---|---|---|
+| Crash *divide by zero* al cambiar modo | Cálculo de escala con divisor 0 | Fix `HIGHDPIAWARE` + DPI 96 ([paso 4](INSTALACION.md#4-aplicar-fix-highdpiaware-previene-crash-divide-by-zero)) |
+| Crash *page fault 0x00000028* | D3D9 sin DLLs nativas | `winetricks d3dx9 gdiplus vcrun2005` |
+| *Failed to load libGL.so.1* | Faltan libs Mesa 32-bit | `apt install libgl1:i386 libegl1:i386` |
+| Textos con IDs en vez de texto | Wine no lee archivos `.mui` | Embeber MUI con Resource Hacker ([paso 5](INSTALACION.md#5-parchear-español-embeber-mui-en-el-exe)) |
+| *Setting line patterns…* | Mensaje informativo de Wine | Ignorar — no afecta funcionalidad |
 
-- Kubuntu 24.04 (Noble) — Kernel 6.17
-- Intel Iris Xe (Alder Lake)
-- Wine 11.0 estable
-- KDE Plasma 6
+</details>
 
-## Archivos del repositorio
+<br>
+
+## Entorno probado
+
+| | Componente | Versión |
+|---|---|---|
+| 💻 | Sistema operativo | Kubuntu 24.04 Noble — Kernel 6.17 |
+| 🖥️ | Escritorio | KDE Plasma 6 |
+| 🎮 | Wine | 11.0 estable (WineHQ) |
+| 🔲 | GPU | Intel Iris Xe (Alder Lake) |
+
+<br>
+
+## Estructura del repositorio
 
 ```
-├── INSTALACION.md   # Guía completa paso a paso
-├── README.md        # Este archivo
-├── jugar.sh         # Lanzador autocontenido
-├── purbleplace.png  # Icono original 256x256
-└── .gitignore       # Excluye binarios y wineprefix
+├── INSTALACION.md     Guía completa paso a paso
+├── README.md          Este archivo
+├── jugar.sh           Lanzador autocontenido
+├── purbleplace.png    Icono original 256×256
+└── .gitignore         Excluye binarios y wineprefix
 ```
 
-> Los binarios del juego (`.exe`, `.dll`) no se incluyen en el repositorio por copyright.
-> Descárgalos desde los enlaces de Internet Archive indicados arriba.
+> Los binarios del juego (`.exe`, `.dll`) no se incluyen por copyright.
+> Descárgalos desde los enlaces de [Internet Archive](#descargas).
+
+<br>
+
+---
+
+<div align="center">
+
+Desarrollado originalmente por **Oberon Games** para Microsoft (2005)
+
+Esta guía documenta cómo ejecutarlo en Linux — no distribuye software propietario.
+
+</div>
