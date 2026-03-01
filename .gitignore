@@ -1,0 +1,4 @@
+wineprefix/
+*.dll
+*.exe
+*.mui
